@@ -1,19 +1,26 @@
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 plugins {
+    id("org.springframework.boot") version "2.1.7.RELEASE"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("java")
 }
 
 group = "com.firstintellj.project"
-version = "1.0-SNAPSHOT"
+val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+version = "1.0.4-SNAPSHOT-$currentDateTime"
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
+    // jcenter()
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-}
-
-tasks.test {
-    useJUnitPlatform()
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.projectlombok:lombok")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("com.h2database:h2")
 }
