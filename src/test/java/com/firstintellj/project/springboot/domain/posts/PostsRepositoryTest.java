@@ -1,5 +1,6 @@
 package com.firstintellj.project.springboot.domain.posts;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.firstintellj.project.springboot.domain.posts.Posts;
 import com.firstintellj.project.springboot.domain.posts.PostsRepository;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -11,7 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -43,6 +46,28 @@ public class PostsRepositoryTest {
         Posts posts = postsList.get(0);
         assertThat(posts.getTitle()).isEqualTo(title);
         assertThat(posts.getContent()).isEqualTo(content);
+    }
+
+    @Test
+    public void BaseTimeEntity_등록(){
+        //given
+        LocalDateTime now = LocalDateTime.of(2023,6,19,0,0,0);
+        postsRepository.save(Posts.builder()
+                .title("title")
+                .content("content")
+                .author("author")
+                .build());
+        //when
+        List<Posts> postsList = postsRepository.findAll();
+
+        //then
+        Posts posts = postsList.get(0);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>> CreateDate ="+ posts.getCreatedDate() +",modifiedDate =" +posts.getModifiedDate());
+
+        assertThat(posts.getCreatedDate()).isAfter(now);
+        assertThat(posts.getModifiedDate()).isAfter(now);
+
     }
 
 
